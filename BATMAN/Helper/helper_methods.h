@@ -9,11 +9,11 @@ typedef struct {
 }BAT;
 
 void init_monitor();
-void arrive(BAT b);
-void cross(BAT b);
-void leave(BAT b);
-void check(BAT b);
-void destroy(BAT b);
-
+void arrive(void* bat);
+void cross(void* bat);
+void leave(void* bat);
+void check(void* bat);
+void destroy();
+void run(void* bat);
 
 #endif /* BATMAN_HELPER_HELPER_METHODS_H_ */

@@ -9,7 +9,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/uio.h>
-
+//nnwweessnwesnwsenswe
+//nwsenwsenwsennsswwee
 pthread_mutex_t mutex;
 
 pthread_cond_t northQueue;
@@ -37,7 +38,6 @@ void init_monitor()
 	total = 0;
 
 	pthread_mutex_init(&mutex, NULL);
-
 	pthread_cond_init(&northQueue, NULL);
 	pthread_cond_init(&eastQueue, NULL);
 	pthread_cond_init(&southQueue, NULL);
@@ -49,70 +49,85 @@ void init_monitor()
 
 };
 
-void arrive(BAT b){
+void arrive(void* bat){
+	BAT *b = (BAT *) bat;
 	pthread_mutex_lock(&mutex);
-	if(b.direcrion == 'n'){
+	if(b->direcrion == 'n'){
 
 		northCounter++;
+		if(northCounter>1)
 		pthread_cond_wait(&northQueue, &mutex);
 
-	}else if(b.direcrion == 'e'){
+	}else if(b->direcrion == 'e'){
 
 		eastCounter++;
+		if(eastCounter>1)
 		pthread_cond_wait(&eastQueue, &mutex);
 
-	}else if(b.direcrion == 's'){
+	}else if(b->direcrion == 's'){
 
 		southCounter++;
+		if(southCounter>1)
 		pthread_cond_wait(&southQueue, &mutex);
 
-	}else if(b.direcrion == 'w'){
+	}else if(b->direcrion == 'w'){
 
 		westCounter++;
+		if(westCounter>1)
 		pthread_cond_wait(&westQueue, &mutex);
 
 	}
-	total++;
-	printf("BAT %d from %c arrives at crossing\n", b.id, b.direcrion);
 
+	total++;
+	printf("BAT %d from %c arrives at crossing\n", b->id, b->direcrion);
 	pthread_mutex_unlock(&mutex);
 };
-void cross(BAT b){
+
+void cross(void* bat){
+	BAT *b = (BAT *) bat;
 	pthread_mutex_lock(&mutex);
-	if(b.right == 'n'){
-		if(northCounter>0){
+	if(b->right == 'n'){
+
+		if(northCounter > 0){
 			 pthread_cond_wait(&northFirst, &mutex);
 		}
-	}else if(b.right == 'e'){
-		if(eastCounter>0){
+
+	}else if(b->right == 'e'){
+
+		if(eastCounter > 0){
 			 pthread_cond_wait(&eastFirst, &mutex);
 		}
-	}else if(b.right == 's'){
-		if(southCounter>0){
+
+	}else if(b->right == 's'){
+
+		if(southCounter > 0){
 			 pthread_cond_wait(&southFirst, &mutex);
 		}
-	}else if(b.right == 'w'){
-		if(westCounter>0){
+
+	}else if(b->right == 'w'){
+
+		if(westCounter > 0){
 			 pthread_cond_wait(&westFirst, &mutex);
 		}
+
 	}
 
-	if(b.direcrion == 'n'){
+	if(b->direcrion == 'n'){
 
 			northCounter--;
 			pthread_cond_signal(&northQueue);
 
-		}else if(b.direcrion == 'e'){
+		}else if(b->direcrion == 'e'){
 
 			eastCounter--;
 			pthread_cond_signal(&eastQueue);
 
-		}else if(b.direcrion == 's'){
+		}else if(b->direcrion == 's'){
 
 			southCounter--;
 			pthread_cond_signal(&southQueue);
 
-		}else if(b.direcrion == 'w'){
+		}else if(b->direcrion == 'w'){
 
 			westCounter--;
 			pthread_cond_signal(&westQueue);
@@ -121,39 +136,43 @@ void cross(BAT b){
 
 	total--;
 
-	printf("BAT %d from %c crossing\n", b.id, b.direcrion);
+	printf("BAT %d from %c crossing\n", b->id, b->direcrion);
 
-	sleep(1);
+    sleep(1);
 
-	pthread_mutex_unlock(&mutex);
+    pthread_mutex_unlock(&mutex);
+
+
 };
-void leave(BAT b){
+
+void leave(void* bat){
+	BAT *b = (BAT *) bat;
 
 	pthread_mutex_lock(&mutex);
 
-	if(b.right == 'n'){
+	if(b->direcrion == 'n'){
 
-		pthread_cond_signal(&northFirst);  //should it be &northFirst or to be northQueue
+		pthread_cond_signal(&northFirst);
 
-	}else if(b.right == 'e'){
+	}else if(b->direcrion == 'e'){
 
 		pthread_cond_signal(&eastFirst);
 
-	}else if(b.right == 's'){
+	}else if(b->direcrion == 's'){
 
 		pthread_cond_signal(&southFirst);
 
-	}else if(b.right == 'w'){
+	}else if(b->direcrion == 'w'){
 
 		pthread_cond_signal(&westFirst);
 
 	}
 
-	printf("BAT %d from %c leaving crossing\n", b.id, b.direcrion);
+	printf("BAT %d from %c leaving crossing\n", b->id, b->direcrion);
 	pthread_mutex_unlock(&mutex);
 };
 
-void destroy(BAT b){
+void destroy(){
     pthread_mutex_destroy(&mutex);
 
     pthread_cond_destroy(&northQueue);
@@ -166,31 +185,43 @@ void destroy(BAT b){
     pthread_cond_destroy(&southFirst);
 };
 
-void check(BAT b){
+void check(void* bat){
+	BAT *b = (BAT *) bat;
+
 	if(total == 4){
-		if(b.direcrion == 'n'){
+
+		if(b->direcrion == 'n'){
 
 			pthread_cond_signal(&northFirst);
-			printf("DEADLOCK: BAT jam detected, signalling North to go");
+			printf("DEADLOCK: BAT jam detected, signalling North to go\n");
 
-		}else if(b.direcrion == 'e'){
+		}else if(b->direcrion == 'e'){
 
 			pthread_cond_signal(&eastFirst);
-			printf("DEADLOCK: BAT jam detected, signalling East to go");
+			printf("DEADLOCK: BAT jam detected, signalling East to go\n");
 
 
-		}else if(b.direcrion == 's'){
+		}else if(b->direcrion == 's'){
 
 			pthread_cond_signal(&southFirst);
-			printf("DEADLOCK: BAT jam detected, signalling South to go");
+			printf("DEADLOCK: BAT jam detected, signalling South to go\n");
 
-		}else if(b.direcrion == 'w'){
+		}else if(b->direcrion == 'w'){
 
-			printf("DEADLOCK: BAT jam detected, signalling West to go");
+			printf("DEADLOCK: BAT jam detected, signalling West to go\n");
 			pthread_cond_signal(&westFirst);
 
 		}
 	}
+};
+
+void run(void *bat){
+
+ BAT *myBat = (BAT *) bat;
+	arrive(myBat);
+//	check(myBat);
+	cross(myBat);
+	leave(myBat);
 };
 
 

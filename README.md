@@ -13,3 +13,6 @@ warehouses to the delivery trucks. Each BAT is a mobile platform that travels on
 and forth between a warehouse and a truck. At most one BAT can cross at a time. Traffic at the
 crossing arriving from the right has the right of way (i.e. East waits till North passes. North waits till
 West passes and so on):
+
+<img align="center" src ="https://github.com/mohamed-said-ibrahem/Threads-Applications/blob/master/BATMAN/image.png" />
+

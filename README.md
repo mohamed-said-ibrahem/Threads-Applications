@@ -2,10 +2,19 @@
 
 1- Matrix Multiplication Using Threads (For each Row method) and (For each Element method).
 
+#### Problem Statement:
+
+It is required to implement two variations of this algorithm:
+
+a. The computation of each element of the output matrix happens in a thread.
+
+b. The computation of each row of the output matrix happens in a thread.
+
+For both variations, you have to compute the elapsed time for each of them, compare them and justify your answer.
 
 # BATMAN:
 
-Problem Statement:
+#### Problem Statement:
 
 A company has employed a Bidirectional Autonomous Trolley (BAT) system to move products from its
 warehouses to the delivery trucks. Each BAT is a mobile platform that travels on separate tracks back
